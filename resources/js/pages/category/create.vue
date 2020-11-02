@@ -17,11 +17,13 @@
                     <label for="">Category name</label>
                     <input
                       type="text"
-                      v-model="categoryName"
+                      v-model="categoryForm.name"
                       class="form-control"
+                      :class="{ 'is-invalid': categoryForm.errors.has('name') }"
                       name="name"
                       placeholder="category name"
                     />
+                    <has-error :form="categoryForm" field="name"></has-error>
                   </div>
                   <div class="form-group">
                     <button type="submit" class="btn btn-success">
@@ -39,19 +41,21 @@
 </template>
 
 <script>
+import { Form } from "vform";
 export default {
   data() {
     return {
-      categoryName: "",
+      categoryForm: new Form({
+        name: "",
+      }),
     };
   },
   methods: {
     createCategory() {
-      axios
-        .post("/api/category", { name: this.categoryName })
-        .then((response) => {
-          console.log(response);
-        });
+      // Submit the form via a POST request
+      this.categoryForm.post("/api/category").then(({ data }) => {
+        this.categoryForm.name = "";
+      });
     },
   },
 };
