@@ -55,6 +55,11 @@ export default {
       // Submit the form via a POST request
       this.categoryForm.post("/api/category").then(({ data }) => {
         this.categoryForm.name = "";
+
+        this.$toast.success({
+          title: "Success!",
+          message: "Category created successfully.",
+        });
       });
     },
   },
