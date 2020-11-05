@@ -6,28 +6,30 @@
           <div
             class="card-header d-flex justify-content-between align-items-center"
           >
-            <h5>Edit Category</h5>
-            <a href="#" class="btn btn-primary">Category List</a>
+            <h5>Edit Category - {{ categoryForm.name }}</h5>
+            <router-link :to="{ name: 'category-list' }" class="btn btn-primary"
+              >Category List</router-link
+            >
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-6 offset-3">
-                <form @submit.prevent="createCategory">
+                <form @submit.prevent="updateCategory">
                   <div class="form-group">
                     <label for="">Category name</label>
                     <input
                       type="text"
                       v-model="categoryForm.name"
                       class="form-control"
-                      :class="{ 'is-invalid': categoryForm.errors.has('name') }"
                       name="name"
                       placeholder="category name"
+                      :class="{ 'is-invalid': categoryForm.errors.has('name') }"
                     />
                     <has-error :form="categoryForm" field="name"></has-error>
                   </div>
                   <div class="form-group">
                     <button type="submit" class="btn btn-success">
-                      Create Category
+                      Update Category
                     </button>
                   </div>
                 </form>
@@ -42,6 +44,7 @@
 
 <script>
 import { Form } from "vform";
+
 export default {
   data() {
     return {
@@ -51,17 +54,27 @@ export default {
     };
   },
   methods: {
-    createCategory() {
-      // Submit the form via a POST request
-      this.categoryForm.post("/api/category").then(({ data }) => {
-        this.categoryForm.name = "";
+    updateCategory() {
+      let id = this.$route.params.id;
 
+      this.categoryForm.put(`/api/category/${id}`).then(() => {
         this.$toast.success({
           title: "Success!",
-          message: "Category created successfully.",
+          message: "Category updated successfully.",
         });
       });
     },
+
+    loadCategory() {
+      let id = this.$route.params.id;
+
+      axios.get(`/api/category/${id}/edit`).then((response) => {
+        this.categoryForm.name = response.data.name;
+      });
+    },
+  },
+  mounted() {
+    this.loadCategory();
   },
 };
 </script>

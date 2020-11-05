@@ -10,6 +10,7 @@ import EditCategory from '../pages/category/edit.vue'
 
 const routes = new VueRouter({
     mode: 'history',
+    linkExactActiveClass: 'active',
     routes: [
         {
             path: '/',
@@ -27,7 +28,7 @@ const routes = new VueRouter({
             name: 'create-category',
         },
         {
-            path: '/category/edit/:slug',
+            path: '/category/edit/:id',
             component: EditCategory,
             name: 'edit-category',
         },

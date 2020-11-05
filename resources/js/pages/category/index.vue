@@ -24,7 +24,7 @@
                   <th style="width: 170px">Action</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody v-if="categories.length">
                 <tr v-for="category in categories" :key="category.id">
                   <td style="width: 100px">{{ category.id }}</td>
                   <td>{{ category.name }}</td>
@@ -33,12 +33,24 @@
                     <router-link
                       :to="{
                         name: 'edit-category',
-                        params: { slug: category.slug },
+                        params: { id: category.id },
                       }"
                       class="btn btn-primary btn-sm"
                       >Edit</router-link
                     >
-                    <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                    <a
+                      @click.prevent="deleteCategory(category)"
+                      href="#"
+                      class="btn btn-danger btn-sm"
+                      >Delete</a
+                    >
+                  </td>
+                </tr>
+              </tbody>
+              <tbody v-else>
+                <tr>
+                  <td colspan="4">
+                    <h5 class="text-center mt-4 mb-4">No categories found.</h5>
                   </td>
                 </tr>
               </tbody>
@@ -62,6 +74,18 @@ export default {
       axios.get("/api/category").then((response) => {
         this.categories = response.data;
       });
+    },
+
+    deleteCategory(category) {
+      axios.delete(`/api/category/${category.id}`).then(() => {
+        this.$toast.success({
+          title: "Success!",
+          message: "Category deleted successfully.",
+        });
+      });
+
+      let index = this.categories.indexOf(category);
+      this.categories.splice(index, 1);
     },
   },
   mounted() {

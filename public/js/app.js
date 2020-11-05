@@ -2001,6 +2001,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2014,7 +2016,6 @@ __webpack_require__.r(__webpack_exports__);
     createCategory: function createCategory() {
       var _this = this;
 
-      // Submit the form via a POST request
       this.categoryForm.post("/api/category").then(function (_ref) {
         var data = _ref.data;
         _this.categoryForm.name = "";
@@ -2083,6 +2084,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2093,20 +2096,28 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    createCategory: function createCategory() {
+    updateCategory: function updateCategory() {
       var _this = this;
 
-      // Submit the form via a POST request
-      this.categoryForm.post("/api/category").then(function (_ref) {
-        var data = _ref.data;
-        _this.categoryForm.name = "";
-
+      var id = this.$route.params.id;
+      this.categoryForm.put("/api/category/".concat(id)).then(function () {
         _this.$toast.success({
           title: "Success!",
-          message: "Category created successfully."
+          message: "Category updated successfully."
         });
       });
+    },
+    loadCategory: function loadCategory() {
+      var _this2 = this;
+
+      var id = this.$route.params.id;
+      axios.get("/api/category/".concat(id, "/edit")).then(function (response) {
+        _this2.categoryForm.name = response.data.name;
+      });
     }
+  },
+  mounted: function mounted() {
+    this.loadCategory();
   }
 });
 
@@ -2173,6 +2184,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2186,6 +2209,18 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/api/category").then(function (response) {
         _this.categories = response.data;
       });
+    },
+    deleteCategory: function deleteCategory(category) {
+      var _this2 = this;
+
+      axios["delete"]("/api/category/".concat(category.id)).then(function () {
+        _this2.$toast.success({
+          title: "Success!",
+          message: "Category deleted successfully."
+        });
+      });
+      var index = this.categories.indexOf(category);
+      this.categories.splice(index, 1);
     }
   },
   mounted: function mounted() {
@@ -39606,7 +39641,26 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-12" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _c(
+            "div",
+            {
+              staticClass:
+                "card-header d-flex justify-content-between align-items-center"
+            },
+            [
+              _c("h5", [_vm._v("Create Category")]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { to: { name: "category-list" } }
+                },
+                [_vm._v("Category List")]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c("div", { staticClass: "row" }, [
@@ -39670,7 +39724,7 @@ var render = function() {
                       1
                     ),
                     _vm._v(" "),
-                    _vm._m(1)
+                    _vm._m(0)
                   ]
                 )
               ])
@@ -39682,25 +39736,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "card-header d-flex justify-content-between align-items-center"
-      },
-      [
-        _c("h5", [_vm._v("Create Category")]),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
-          _vm._v("Category List")
-        ])
-      ]
-    )
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -39739,7 +39774,28 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-12" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _c(
+            "div",
+            {
+              staticClass:
+                "card-header d-flex justify-content-between align-items-center"
+            },
+            [
+              _c("h5", [
+                _vm._v("Edit Category - " + _vm._s(_vm.categoryForm.name))
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { to: { name: "category-list" } }
+                },
+                [_vm._v("Category List")]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c("div", { staticClass: "row" }, [
@@ -39750,7 +39806,7 @@ var render = function() {
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
-                        return _vm.createCategory($event)
+                        return _vm.updateCategory($event)
                       }
                     }
                   },
@@ -39803,7 +39859,7 @@ var render = function() {
                       1
                     ),
                     _vm._v(" "),
-                    _vm._m(1)
+                    _vm._m(0)
                   ]
                 )
               ])
@@ -39819,30 +39875,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "card-header d-flex justify-content-between align-items-center"
-      },
-      [
-        _c("h5", [_vm._v("Edit Category")]),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
-          _vm._v("Category List")
-        ])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "form-group" }, [
       _c(
         "button",
         { staticClass: "btn btn-success", attrs: { type: "submit" } },
-        [_vm._v("\n                    Create Category\n                  ")]
+        [_vm._v("\n                    Update Category\n                  ")]
       )
     ])
   }
@@ -39897,51 +39934,59 @@ var render = function() {
             _c("table", { staticClass: "table" }, [
               _vm._m(0),
               _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.categories, function(category) {
-                  return _c("tr", { key: category.id }, [
-                    _c("td", { staticStyle: { width: "100px" } }, [
-                      _vm._v(_vm._s(category.id))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(category.name))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(category.slug))]),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      { staticStyle: { width: "170px" } },
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            staticClass: "btn btn-primary btn-sm",
-                            attrs: {
-                              to: {
-                                name: "edit-category",
-                                params: { slug: category.slug }
-                              }
-                            }
-                          },
-                          [_vm._v("Edit")]
-                        ),
+              _vm.categories.length
+                ? _c(
+                    "tbody",
+                    _vm._l(_vm.categories, function(category) {
+                      return _c("tr", { key: category.id }, [
+                        _c("td", { staticStyle: { width: "100px" } }, [
+                          _vm._v(_vm._s(category.id))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(category.name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(category.slug))]),
                         _vm._v(" "),
                         _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger btn-sm",
-                            attrs: { href: "#" }
-                          },
-                          [_vm._v("Delete")]
+                          "td",
+                          { staticStyle: { width: "170px" } },
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "btn btn-primary btn-sm",
+                                attrs: {
+                                  to: {
+                                    name: "edit-category",
+                                    params: { id: category.id }
+                                  }
+                                }
+                              },
+                              [_vm._v("Edit")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-danger btn-sm",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.deleteCategory(category)
+                                  }
+                                }
+                              },
+                              [_vm._v("Delete")]
+                            )
+                          ],
+                          1
                         )
-                      ],
-                      1
-                    )
-                  ])
-                }),
-                0
-              )
+                      ])
+                    }),
+                    0
+                  )
+                : _c("tbody", [_vm._m(1)])
             ])
           ])
         ])
@@ -39963,6 +40008,18 @@ var staticRenderFns = [
         _c("th", [_vm._v("Slug")]),
         _vm._v(" "),
         _c("th", { staticStyle: { width: "170px" } }, [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "4" } }, [
+        _c("h5", { staticClass: "text-center mt-4 mb-4" }, [
+          _vm._v("No categories found.")
+        ])
       ])
     ])
   }
@@ -55695,6 +55752,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 
 var routes = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
+  linkExactActiveClass: 'active',
   routes: [{
     path: '/',
     component: _pages_home_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -55708,7 +55766,7 @@ var routes = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     component: _pages_category_create_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
     name: 'create-category'
   }, {
-    path: '/category/edit/:slug',
+    path: '/category/edit/:id',
     component: _pages_category_edit_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
     name: 'edit-category'
   }]

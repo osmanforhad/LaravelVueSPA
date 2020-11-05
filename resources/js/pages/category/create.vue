@@ -7,7 +7,9 @@
             class="card-header d-flex justify-content-between align-items-center"
           >
             <h5>Create Category</h5>
-            <a href="#" class="btn btn-primary">Category List</a>
+            <router-link :to="{ name: 'category-list' }" class="btn btn-primary"
+              >Category List</router-link
+            >
           </div>
           <div class="card-body">
             <div class="row">
@@ -19,9 +21,9 @@
                       type="text"
                       v-model="categoryForm.name"
                       class="form-control"
-                      :class="{ 'is-invalid': categoryForm.errors.has('name') }"
                       name="name"
                       placeholder="category name"
+                      :class="{ 'is-invalid': categoryForm.errors.has('name') }"
                     />
                     <has-error :form="categoryForm" field="name"></has-error>
                   </div>
@@ -42,6 +44,7 @@
 
 <script>
 import { Form } from "vform";
+
 export default {
   data() {
     return {
@@ -52,7 +55,6 @@ export default {
   },
   methods: {
     createCategory() {
-      // Submit the form via a POST request
       this.categoryForm.post("/api/category").then(({ data }) => {
         this.categoryForm.name = "";
 
